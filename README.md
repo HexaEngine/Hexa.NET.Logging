@@ -114,4 +114,4 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ## License
 
-Hexa.NET.Logging is licensed under the MIT License. See the LICENSE file for more details.
+Hexa.NET.Logging is licensed under the MIT License. See the [LICENSE](https://github.com/HexaEngine/Hexa.NET.Logging/blob/master/LICENSE.txt) file for more details.
