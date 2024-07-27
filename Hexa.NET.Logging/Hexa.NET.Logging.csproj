@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>12</LangVersion>
+	</PropertyGroup>
+
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<IsAotCompatible>true</IsAotCompatible>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+		<EnableAotAnalyzer>true</EnableAotAnalyzer>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>Hexa.NET.Logging</PackageId>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<PackageVersion>2.0.0</PackageVersion>
+		<Authors>Juna</Authors>
+		<AssemblyName>Hexa.NET.Logging</AssemblyName>
+		<PackageProjectUrl>https://github.com/HexaEngine/Hexa.NET.Logging</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/HexaEngine/Hexa.NET.Logging</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<Description>The logging library for HexaEngine.</Description>
+		<PackageTags>HexaEngine Logging Hexa HexaGen C# .NET DotNet Sharp Windows macOS Native</PackageTags>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="../LICENSE.txt" Pack="true" PackagePath="\" />
+		<Content Include="../README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Hexa.NET.Utilities" Version="2.0.1" />
+	</ItemGroup>
+
+</Project>
