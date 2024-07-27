@@ -30,6 +30,10 @@ Here is a basic example of how to use Hexa.NET.Logging in your application:
 ```csharp
 using Hexa.NET.Logging;
 
+// Add a log writer. (LogFileWriter is a build-in log writer.)
+var logWriter = new LogFileWriter("logs");
+LoggerFactory.AddGlobalWriter(logWriter);
+
 // Retrieve a logger for a specific category
 var logger = LoggerFactory.GetLogger(nameof(MyClass));
 
