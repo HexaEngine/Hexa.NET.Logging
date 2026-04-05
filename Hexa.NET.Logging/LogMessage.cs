@@ -11,7 +11,7 @@
         /// <summary>
         /// Gets or sets the logger of the log message.
         /// </summary>
-        public ILogger Logger;
+        public Logger Logger;
 
         /// <summary>
         /// Gets or sets the severity of the log message.
@@ -35,7 +35,7 @@
         /// <param name="severity">The severity of the log message.</param>
         /// <param name="source">The source of the log message.</param>
         /// <param name="message">The main content of the log message.</param>
-        public LogMessage(ILogger logger, LogSeverity severity, string source, string message) : this()
+        public LogMessage(Logger logger, LogSeverity severity, string source, string message) : this()
         {
             Logger = logger;
             Severity = severity;
@@ -49,7 +49,7 @@
         /// <param name="logger">The logger of the log message.</param>
         /// <param name="severity">The severity of the log message.</param>
         /// <param name="message">The main content of the log message.</param>
-        public LogMessage(ILogger logger, LogSeverity severity, string message) : this()
+        public LogMessage(Logger logger, LogSeverity severity, string message) : this()
         {
             Logger = logger;
             Severity = severity;
@@ -64,7 +64,7 @@
 
         public readonly bool Equals(LogMessage other)
         {
-            return EqualityComparer<ILogger>.Default.Equals(Logger, other.Logger) &&
+            return EqualityComparer<Logger>.Default.Equals(Logger, other.Logger) &&
                    Severity == other.Severity &&
                    Message == other.Message &&
                    Timestamp == other.Timestamp;

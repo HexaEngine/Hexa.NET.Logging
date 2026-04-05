@@ -1,52 +1,69 @@
 ﻿namespace Hexa.NET.Logging
 {
-    using Hexa.NET.Utilities.Threading;
+    using Hexa.NET.Utilities;
     using System.Collections.Concurrent;
 
     public class LoggerFactory
     {
-        private static readonly ConcurrentDictionary<string, ILogger> loggers = new();
-        private static readonly ReadWriteLock readWriteLock = new(int.MaxValue, 1);
+        private static readonly ConcurrentDictionary<string, Logger> loggers = new();
+        private static ReaderWriterLockLight readerWriterLock = new();
 
-        private static readonly List<ILogWriter> globalWriters = new();
+        private static readonly List<ILogWriter> globalWriters = [];
 
-        public static readonly ILogger General = GetLogger(nameof(General));
+        public static readonly Logger General = GetLogger(nameof(General));
 
         public static IEnumerable<ILogWriter> GetGlobalWriters()
         {
-            return new ReadWriteLockEnumerable<ILogWriter>(readWriteLock, globalWriters);
+            return globalWriters;
         }
+
+        public static ref ReaderWriterLockLight ReaderWriterLock => ref readerWriterLock;
 
         public static void AddGlobalWriter(ILogWriter writer)
         {
-            using (readWriteLock.BeginWriteBlock())
+            readerWriterLock.EnterWrite();
+            try
             {
                 globalWriters.Add(writer);
+            }
+            finally
+            {
+                readerWriterLock.ExitWrite();
             }
         }
 
         public static bool RemoveGlobalWriter(ILogWriter writer)
         {
-            lock (readWriteLock.BeginWriteBlock())
+            readerWriterLock.EnterWrite();
+            try
             {
                 return globalWriters.Remove(writer);
+            }
+            finally
+            {
+                readerWriterLock.ExitWrite();
             }
         }
 
         public static void ClearGlobalWriters()
         {
-            lock (readWriteLock.BeginWriteBlock())
+            readerWriterLock.EnterWrite();
+            try
             {
                 globalWriters.Clear();
             }
+            finally
+            {
+                readerWriterLock.ExitWrite();
+            }
         }
 
-        public static ILogger GetLogger(string name)
+        public static Logger GetLogger(string name)
         {
             return loggers.GetOrAdd(name, name => new Logger(name));
         }
 
-        public static T GetLogger<T>(string name) where T : ILogger, new()
+        public static T GetLogger<T>(string name) where T : Logger, new()
         {
             return (T)loggers.GetOrAdd(name, name => { T t = new() { Name = name }; return t; });
         }
@@ -68,13 +85,19 @@
                 logger.Close();
             }
 
-            readWriteLock.BeginWrite();
-            foreach (var writer in globalWriters)
+            readerWriterLock.EnterWrite();
+            try
             {
-                writer.Dispose();
+                foreach (var writer in globalWriters)
+                {
+                    writer.Dispose();
+                }
+                globalWriters.Clear();
             }
-            globalWriters.Clear();
-            readWriteLock.EndWrite();
+            finally
+            {
+                readerWriterLock.ExitWrite();
+            }
         }
     }
 }

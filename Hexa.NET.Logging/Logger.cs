@@ -7,7 +7,7 @@
     /// <summary>
     /// Provides logging capabilities with various log writers and log levels.
     /// </summary>
-    public class Logger : ILogger
+    public class Logger
     {
         private readonly SemaphoreSlim semaphore = new(1);
         private LogSeverity logLevel;
@@ -103,10 +103,20 @@
             {
                 Writers[i].Log(message);
             }
-            foreach (ILogWriter writer in LoggerFactory.GetGlobalWriters())
+
+            LoggerFactory.ReaderWriterLock.EnterRead();
+            try
             {
-                writer.Log(message);
+                foreach (ILogWriter writer in LoggerFactory.GetGlobalWriters())
+                {
+                    writer.Log(message);
+                }
             }
+            finally
+            {
+                LoggerFactory.ReaderWriterLock.ExitRead();
+            }
+
             semaphore.Release();
         }
 
@@ -127,10 +137,20 @@
             {
                 await Writers[i].LogAsync(message);
             }
-            foreach (ILogWriter writer in LoggerFactory.GetGlobalWriters())
+
+            LoggerFactory.ReaderWriterLock.EnterRead();
+            try
             {
-                await writer.LogAsync(message);
+                foreach (ILogWriter writer in LoggerFactory.GetGlobalWriters())
+                {
+                    await writer.LogAsync(message);
+                }
             }
+            finally
+            {
+                LoggerFactory.ReaderWriterLock.ExitRead();
+            }
+
             semaphore.Release();
         }
 
