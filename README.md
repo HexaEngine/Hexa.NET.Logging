@@ -30,6 +30,10 @@ Here is a basic example of how to use Hexa.NET.Logging in your application:
 ```csharp
 using Hexa.NET.Logging;
 
+// Add a log writer. (LogFileWriter is a build-in log writer.)
+var logWriter = new LogFileWriter("logs");
+LoggerFactory.AddGlobalWriter(logWriter);
+
 // Retrieve a logger for a specific category
 var logger = LoggerFactory.GetLogger(nameof(MyClass));
 
@@ -114,4 +118,4 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ## License
 
-Hexa.NET.Logging is licensed under the MIT License. See the LICENSE file for more details.
+Hexa.NET.Logging is licensed under the MIT License. See the [LICENSE](https://github.com/HexaEngine/Hexa.NET.Logging/blob/master/LICENSE.txt) file for more details.
